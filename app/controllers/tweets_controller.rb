@@ -3,16 +3,16 @@ class TweetsController < ApplicationController
   before_action :move_to_index, except: [:index, :show]
 
   def index
-    @tweets = Tweet.includes(:user)
+    @tweets = Tweet.includes(:user).order("created_at DESC")
   end
 
   def new
-    @tweets = Tweet.new
+    @tweet = Tweet.new
   end
 
   def create
     Tweet.create(tweet_params)
-    redirect_ti '/'
+    redirect_to '/'
   end
 
   def destroy
@@ -34,10 +34,9 @@ class TweetsController < ApplicationController
   end
 
   private
-
   def tweet_params
-    params.require(:tweet).permit(:image, :text).merge(user_id: current_user.id)
-  end  
+    params.require(:tweet).permit(:name, :image, :text).merge(user_id: current_user.id)
+  end
 
   def set_tweet
     @tweet = Tweet.find(params[:id])
